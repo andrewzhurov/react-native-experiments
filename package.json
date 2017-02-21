@@ -1,0 +1,20 @@
+{
+  "name": "broose_react-native-experiments",
+  "version": "0.3.4",
+  "description": "broose's react-native experiments, primary Java interactions",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "not yet"
+  },
+  "keywords": [
+    "react-native",
+    "sample",
+    "example"
+  ],
+  "author": "Andrew Zhurov brownmoose3q@gmail.com ",
+  "license": "MIT",
+  "peerDependencies": {
+    "react-native": ">=0.8.0"
+  }
+}
