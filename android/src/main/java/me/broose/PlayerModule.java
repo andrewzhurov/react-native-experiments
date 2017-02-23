@@ -14,6 +14,8 @@ import android.content.Context;
 import java.io.File;
 import android.net.Uri;
 
+import android.media.MediaPlayer;
+
 public class PlayerModule extends ReactContextBaseJavaModule {
 
   public PlayerModule(ReactApplicationContext reactContext) {
@@ -30,14 +32,7 @@ public class PlayerModule extends ReactContextBaseJavaModule {
     return constants;
   }
  
-  @ReactMethod
-  public void create(String path) {
-    File file = new File(path);
-    Uri uri = Uri.fromFile(file); 
-    Toast.makeText(getReactApplicationContext(), uri.toString(), Toast.LENGTH_SHORT).show();
-    //this.mp = MediaPlayer.create(getReactApplicationContext(), uri);
-  }
-  @ReactMethod
+    @ReactMethod
   public void create(String path) {
     File file = new File(path);
     Uri uri = Uri.fromFile(file); 
