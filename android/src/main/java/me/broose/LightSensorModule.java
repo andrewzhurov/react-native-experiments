@@ -38,11 +38,11 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
   }
   @ReactMethod
   public void toastQuick (String message) {
-      Toast.makeText(getReactApplicationContext(), "Listener registered", Toast.LENGTH_SHORT).show();
+      Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
   }
     
   @ReactMethod
-  public void show(String message, int duration) {
+  public void keepMeUpdated() {
       SensorManager mySensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         
       Sensor LightSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
