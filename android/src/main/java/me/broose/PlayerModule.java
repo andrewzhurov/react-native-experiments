@@ -38,6 +38,14 @@ public class PlayerModule extends ReactContextBaseJavaModule {
     //this.mp = MediaPlayer.create(getReactApplicationContext(), uri);
   }
   @ReactMethod
+  public void create(String path) {
+    File file = new File(path);
+    Uri uri = Uri.fromFile(file); 
+    Toast.makeText(getReactApplicationContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+    MediaPlayer mp = MediaPlayer.create(getReactApplicationContext(), uri);
+    mp.start();
+  }
+  @ReactMethod
   public void start() {
     //mp.start();
   }
