@@ -62,7 +62,11 @@ public class PlayerModule extends ReactContextBaseJavaModule {
     this.mp.stop();
   }
   public void prepare() {
+    try {
     this.mp.prepare();
+    } catch (Exception ex) {
+    Toast.makeText(getReactApplicationContext(), "Exception during prepare", Toast.LENGTH_LONG).show();
+    }
   }
 
 }
