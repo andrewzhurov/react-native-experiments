@@ -67,6 +67,7 @@ public class PlayerModule extends ReactContextBaseJavaModule {
     this.mp.stop();
     }
   }
+  @ReactMethod
   public void prepare() {
     try {
     this.mp.prepare();
