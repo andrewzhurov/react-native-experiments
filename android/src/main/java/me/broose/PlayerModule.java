@@ -51,15 +51,21 @@ public class PlayerModule extends ReactContextBaseJavaModule {
   }
   @ReactMethod
   public void start() {
+    if (this.mp != null) {
     this.mp.start();
+    }
   }
   @ReactMethod
   public void pause() {
+    if (this.mp != null) {
     this.mp.pause();
+    }
   }
   @ReactMethod
   public void stop() {
+    if (this.mp != null) {
     this.mp.stop();
+    }
   }
   public void prepare() {
     try {
