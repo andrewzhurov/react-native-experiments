@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 import java.util.Map;
+import java.util.HashMap;
 import android.content.Context;
 import java.io.File;
 import android.net.Uri;
@@ -32,7 +33,7 @@ public class PlayerModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void create(String path) {
     File file = new File(path);
-    Uri uri = file.toURI(); 
+    Uri uri = Uri.fromFile(file); 
     Toast.makeText(getReactApplicationContext(), uri.toString(), Toast.LENGTH_SHORT).show();
     //this.mp = MediaPlayer.create(getReactApplicationContext(), uri);
   }

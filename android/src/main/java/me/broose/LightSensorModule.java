@@ -1,6 +1,7 @@
 package me.broose;
 
 import android.widget.Toast;
+import android.content.Context;
 
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -14,11 +15,15 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import java.util.Map;
+import java.util.HashMap;
+
 
 public class LightSensorModule extends ReactContextBaseJavaModule {
+  private Context context;
 
   public LightSensorModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    this.context = reactContext;
   }
     
   @Override
@@ -38,7 +43,7 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
     
   @ReactMethod
   public void show(String message, int duration) {
-      SensorManager mySensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+      SensorManager mySensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         
       Sensor LightSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
       if(LightSensor != null){
@@ -47,9 +52,9 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
                                            LightSensor, 
                                            SensorManager.SENSOR_DELAY_NORMAL);
           
-          this.toastQuick("Listener registered");
+          toastQuick("Listener registered");
       }else{
-      this.toastQuick("Light sensor doesn't present");}
+      toastQuick("Light sensor doesn't present");}
   }
     
   private final SensorEventListener LightSensorListener
@@ -63,7 +68,7 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
               @Override
               public void onSensorChanged(SensorEvent event) {
                   if(event.sensor.getType() == Sensor.TYPE_LIGHT){
-                      this.toastQuick("LIGHT: " + event.values[0]);
+                      toastQuick("LIGHT: " + event.values[0]);
                   }
               }
      
