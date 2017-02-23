@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.media.MediaPlayer;
 
 public class PlayerModule extends ReactContextBaseJavaModule {
+  private static MediaPlayer mp;
 
   public PlayerModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -32,21 +33,33 @@ public class PlayerModule extends ReactContextBaseJavaModule {
     return constants;
   }
  
-    @ReactMethod
+  @ReactMethod
   public void create(String path) {
     File file = new File(path);
     Uri uri = Uri.fromFile(file); 
     Toast.makeText(getReactApplicationContext(), uri.toString(), Toast.LENGTH_SHORT).show();
     MediaPlayer mp = MediaPlayer.create(getReactApplicationContext(), uri);
-    mp.start();
+    if(this.mp != null) {
+      this.mp.release();
+    }
+    if(mp != null) {
+      this.mp = mp;
+      Toast.makeText(getReactApplicationContext(), "Player created", Toast.LENGTH_LONG).show();
+    } else {
+      Toast.makeText(getReactApplicationContext(), "Can't create a player", Toast.LENGTH_LONG).show();
+    }
   }
   @ReactMethod
   public void start() {
-    //mp.start();
+    this.mp.start();
   }
   @ReactMethod
   public void pause() {
-    //mp.pause();
+    this.mp.pause();
+  }
+  @ReactMethod
+  public void stop() {
+    this.mp.stop();
   }
 
 }
