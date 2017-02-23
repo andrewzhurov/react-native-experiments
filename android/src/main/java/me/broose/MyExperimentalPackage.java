@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.broose.ToastModule;
+import me.broose.MyToastModule;
 import me.broose.PlayerModule;
 import me.broose.LightSensorModule;
 
@@ -33,7 +33,7 @@ public class MyExperimentalPackage implements ReactPackage {
                               ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new ToastModule(reactContext));
+    modules.add(new MyToastModule(reactContext));
     modules.add(new PlayerModule(reactContext));
     modules.add(new LightSensorModule(reactContext));
 

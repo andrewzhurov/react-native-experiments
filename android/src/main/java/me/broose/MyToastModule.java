@@ -11,18 +11,18 @@ import com.facebook.react.bridge.ReactMethod;
 import java.util.Map;
 import java.util.HashMap;
 
-public class ToastModule extends ReactContextBaseJavaModule {
+public class MyToastModule extends ReactContextBaseJavaModule {
 
   private static final String DURATION_SHORT_KEY = "SHORT";
   private static final String DURATION_LONG_KEY = "LONG";
 
-  public ToastModule(ReactApplicationContext reactContext) {
+  public MyToastModule(ReactApplicationContext reactContext) {
     super(reactContext);
   }
     
   @Override
   public String getName() {
-    return "ToastAndroid";
+    return "MyToastAndroid";
   }
     
   @Override

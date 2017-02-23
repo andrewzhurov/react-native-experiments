@@ -21,3 +21,18 @@ build:
 	npm run build
 
 auto_publish: install build publish
+
+git_all:
+	git add ./
+	git commit -m "Version update"
+	git push origin master
+
+pp: 
+	npm version patch
+	npm publish
+mp:
+	npm version minor
+	npm publish
+
+gpp: git_all pp
+gmp: git_all mp
