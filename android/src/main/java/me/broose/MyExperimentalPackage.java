@@ -14,6 +14,7 @@ import java.util.List;
 import me.broose.MyToastModule;
 import me.broose.PlayerModule;
 import me.broose.LightSensorModule;
+import me.broose.p2p.P2PModule;
 
 
 public class MyExperimentalPackage implements ReactPackage {
@@ -36,6 +37,7 @@ public class MyExperimentalPackage implements ReactPackage {
     modules.add(new MyToastModule(reactContext));
     modules.add(new PlayerModule(reactContext));
     modules.add(new LightSensorModule(reactContext));
+    modules.add(new P2PModule(reactContext));
 
     return modules;
   }
