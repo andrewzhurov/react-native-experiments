@@ -40,7 +40,7 @@ public class P2pModule extends ReactContextBaseJavaModule {
   }
     
   private WifiP2pManager mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-  private Channel mChannel = mManager.initialize(this, context.getMainLooper(), null);
+  private Channel mChannel = mManager.initialize(context, context.getMainLooper(), null);
   private BroadcastReceiver receiver;
 
   @ReactMethod
@@ -48,14 +48,14 @@ public class P2pModule extends ReactContextBaseJavaModule {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
     //receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
     receiver = new P2pBroadcastReceiver();
-    registerReceiver(receiver, intentFilter);
+    context.registerReceiver(receiver, intentFilter);
 
     showShort("Receiver registered");
   }
 
  @ReactMethod
   public void unregisterP2pReceiver() {
-    unregisterReceiver(receiver);
+    context.unregisterReceiver(receiver);
 
     showShort("Receiver unregistered");
  }
