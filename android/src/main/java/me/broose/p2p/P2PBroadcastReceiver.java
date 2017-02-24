@@ -7,8 +7,10 @@ import android.widget.Toast;
 
 
 public class P2PBroadcastReceiver extends BroadcastReceiver {
+    private Context context;
     @Override
     public void onReceive(Context context, Intent intent) {
+        this.context = context;
         String action = intent.getAction();
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
             // Determine if Wifi P2P mode is enabled or not, alert
@@ -41,7 +43,7 @@ public class P2PBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void showShort(String message) {
-        Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show();
     }
 
 }
