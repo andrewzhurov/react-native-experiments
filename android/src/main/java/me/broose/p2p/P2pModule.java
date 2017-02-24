@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.content.IntentFilter;
-import java.nio.channels.Channel;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -15,15 +15,15 @@ import android.widget.Toast;
 import java.util.Map;
 import java.util.HashMap;
 
-import me.broose.p2p.P2PBroadcastReceiver;
+import me.broose.p2p.P2pBroadcastReceiver;
 import me.broose.MyToastModule;
 
-public class P2PModule extends ReactContextBaseJavaModule {
+public class P2pModule extends ReactContextBaseJavaModule {
 
   private static final IntentFilter intentFilter = new IntentFilter();
   private Context context;
 
-  public P2PModule(ReactApplicationContext reactContext) {
+  public P2pModule(ReactApplicationContext reactContext) {
     super(reactContext);
       //  Indicates a change in the Wi-Fi P2P status.
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -40,20 +40,21 @@ public class P2PModule extends ReactContextBaseJavaModule {
   }
     
   private WifiP2pManager mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-  private Channel mChannel = mManager.initialize(this, getMainLooper(), null);
+  private Channel mChannel = mManager.initialize(this, context.getMainLooper(), null);
   private BroadcastReceiver receiver;
 
   @ReactMethod
-  public void registerReceiver() {
+  public void registerP2pReceiver() {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
-    receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
+    //receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
+    receiver = new P2pBroadcastReceiver();
     registerReceiver(receiver, intentFilter);
 
     showShort("Receiver registered");
   }
 
  @ReactMethod
-  public void unregisterReceiver() {
+  public void unregisterP2pReceiver() {
     unregisterReceiver(receiver);
 
     showShort("Receiver unregistered");
@@ -86,7 +87,7 @@ public class P2PModule extends ReactContextBaseJavaModule {
     
   @Override
   public String getName() {
-    return "P2PAndroid";
+    return "P2pAndroid";
   }
     
   @Override

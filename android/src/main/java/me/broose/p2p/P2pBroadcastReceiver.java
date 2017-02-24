@@ -6,7 +6,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.widget.Toast;
 
 
-public class P2PBroadcastReceiver extends BroadcastReceiver {
+public class P2pBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     @Override
     public void onReceive(Context context, Intent intent) {
