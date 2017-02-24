@@ -22,9 +22,13 @@ build:
 
 auto_publish: install build publish
 
-git_all:
+git_patch:
 	git add ./
-	git commit -m "Version update"
+	git commit -m "Patch"
+	git push origin master
+git_minor:
+	git add ./
+	git commit -m "Minor"
 	git push origin master
 
 pp: 
@@ -34,5 +38,5 @@ mp:
 	npm version minor
 	npm publish
 
-gpp: git_all pp
-gmp: git_all mp
+gpp: git_patch pp
+gmp: git_minor mp
