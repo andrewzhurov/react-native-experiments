@@ -20,7 +20,7 @@ import me.broose.MyToastModule;
 
 public class P2PModule extends ReactContextBaseJavaModule {
 
-  private final IntentFilter intentFilter = new IntentFilter();
+  private static final IntentFilter intentFilter = new IntentFilter();
   static {
       //  Indicates a change in the Wi-Fi P2P status.
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
