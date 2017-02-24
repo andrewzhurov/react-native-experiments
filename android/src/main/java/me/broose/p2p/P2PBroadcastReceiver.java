@@ -7,7 +7,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import me.broose.MyToastModule;
 
 
-public class P2PModule extends BroadcastReceiver {
+public class P2PBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
