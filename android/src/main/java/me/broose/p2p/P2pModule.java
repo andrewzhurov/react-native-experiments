@@ -20,8 +20,12 @@ import me.broose.MyToastModule;
 
 public class P2pModule extends ReactContextBaseJavaModule {
 
-  private static final IntentFilter intentFilter = new IntentFilter();
+  private final IntentFilter intentFilter = new IntentFilter();
   private Context context;
+  private WifiP2pManager mManager;
+  private Channel mChannel;
+  private BroadcastReceiver receiver;
+
 
   public P2pModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -36,14 +40,14 @@ public class P2pModule extends ReactContextBaseJavaModule {
 
       // Indicates this device's details have changed.
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-      this.context = reactContext;
+      context = reactContext;
+
+      mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
+      mChannel= mManager.initialize(context, reactContext.getMainLooper(), null);
+
   }
     
-  private WifiP2pManager mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-  private Channel mChannel = mManager.initialize(context, context.getMainLooper(), null);
-  private BroadcastReceiver receiver;
-
-  @ReactMethod
+    @ReactMethod
   public void registerP2pReceiver() {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
     //receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
