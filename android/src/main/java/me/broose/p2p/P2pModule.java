@@ -47,7 +47,7 @@ public class P2pModule extends ReactContextBaseJavaModule {
 
   }
     
-    @ReactMethod
+  @ReactMethod
   public void registerP2pReceiver() {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
     //receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
@@ -103,10 +103,10 @@ public class P2pModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void show(String message, int duration) {
     Toast.makeText(getReactApplicationContext(), message, duration).show();
-    Toast.makeText(getReactApplicationContext(), message, duration).show();
   }
     
-  private void showShort(String message) {
+  @ReactMethod
+  public void showShort(String message) {
     Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
   }
     
