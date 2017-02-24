@@ -20,17 +20,19 @@ import me.broose.MyToastModule;
 public class P2PModule extends ReactContextBaseJavaModule {
 
   private final IntentFilter intentFilter = new IntentFilter();
-  //  Indicates a change in the Wi-Fi P2P status.
-  intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+  static {
+      //  Indicates a change in the Wi-Fi P2P status.
+      intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 
-  // Indicates a change in the list of available peers.
-  intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+      // Indicates a change in the list of available peers.
+      intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
 
-  // Indicates the state of Wi-Fi P2P connectivity has changed.
-  intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+      // Indicates the state of Wi-Fi P2P connectivity has changed.
+      intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 
-  // Indicates this device's details have changed.
-  intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+      // Indicates this device's details have changed.
+      intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+  }
     
   private WifiP2pManager mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
   private Channel mChannel = mManager.initialize(this, getMainLooper(), null);
