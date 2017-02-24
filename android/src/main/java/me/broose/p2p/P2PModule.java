@@ -21,6 +21,7 @@ import me.broose.MyToastModule;
 public class P2PModule extends ReactContextBaseJavaModule {
 
   private static final IntentFilter intentFilter = new IntentFilter();
+  private Context context;
 
   public P2PModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -35,9 +36,10 @@ public class P2PModule extends ReactContextBaseJavaModule {
 
       // Indicates this device's details have changed.
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+      context = reactContext;
   }
     
-  private WifiP2pManager mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+  private WifiP2pManager mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
   private Channel mChannel = mManager.initialize(this, getMainLooper(), null);
   private BroadcastReceiver receiver;
 
