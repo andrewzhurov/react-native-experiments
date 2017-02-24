@@ -1,4 +1,4 @@
-package me.broose;
+package me.broose.p2p;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,13 +44,14 @@ public class P2PModule extends ReactContextBaseJavaModule {
     receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
     registerReceiver(receiver, intentFilter);
 
-    MyToastModule.quickShow("Receiver registered");
+    showShort("Receiver registered");
   }
 
  @ReactMethod
   public void unregisterReceiver() {
     unregisterReceiver(receiver);
-    MyToastModule.quickShow("Receiver unregistered");
+
+    showShort("Receiver unregistered");
  }
 
   @ReactMethod
@@ -63,14 +64,14 @@ public class P2PModule extends ReactContextBaseJavaModule {
             // No services have actually been discovered yet, so this method
             // can often be left blank.  Code for peer discovery goes in the
             // onReceive method, detailed below.
-            MyToastModule.quickShow("Peer discovery success");
+            showShort("Peer discovery success");
         }
 
         @Override
         public void onFailure(int reasonCode) {
             // Code for when the discovery initiation fails goes here.
             // Alert the user that something went wrong.
-            MyToastModule.quickShow("Peer discovery failure");
+            showShort("Peer discovery failure");
         }
         });
   }
@@ -94,5 +95,11 @@ public class P2PModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void show(String message, int duration) {
     Toast.makeText(getReactApplicationContext(), message, duration).show();
+    Toast.makeText(getReactApplicationContext(), message, duration).show();
   }
+    
+  private void showShort(String message) {
+    Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
+  }
+    
 }

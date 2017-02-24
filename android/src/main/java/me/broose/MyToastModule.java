@@ -40,7 +40,7 @@ public class MyToastModule extends ReactContextBaseJavaModule {
     
   // TODO it may fail due static, check it
   @ReactMethod
-  public static void quickShow(String message, int duration) {
-    Toast.makeText(getReactApplicationContext(), message, duration).show();
+  public void showShort(String message) {
+    Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
   }
 }
