@@ -21,7 +21,9 @@ import me.broose.MyToastModule;
 public class P2PModule extends ReactContextBaseJavaModule {
 
   private static final IntentFilter intentFilter = new IntentFilter();
-  static {
+
+  public P2PModule(ReactApplicationContext reactContext) {
+    super(reactContext);
       //  Indicates a change in the Wi-Fi P2P status.
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 
@@ -78,9 +80,7 @@ public class P2PModule extends ReactContextBaseJavaModule {
   }
  
 
-  public P2PModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-  }
+  
     
   @Override
   public String getName() {
