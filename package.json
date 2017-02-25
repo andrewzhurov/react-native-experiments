@@ -1,6 +1,6 @@
 {
   "name": "broose_react-native-experiments",
-  "version": "0.4.20",
+  "version": "0.4.22",
   "description": "broose's react-native experiments, primarily Java interactions",
   "main": "index.js",
   "repository": {

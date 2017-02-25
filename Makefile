@@ -39,8 +39,9 @@ pp!:
 
 gpp: 
 	$(eval MSG ?= "Patch")
-	make git_all MSG="$(MSG)"
-	make pp
+	git add ./
+	npm version patch --force --message "$(MSG) %s"
+	npm publish
 gmp: 
 	$(eval MSG ?= "Minor")
 	make git_all MSG="$(MSG)"
