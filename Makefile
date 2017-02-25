@@ -28,10 +28,10 @@ git_all:
 	git push origin master
 
 pp:
-	npm version patch --message "$(MSG)"
+	npm version patch
 	npm publish
 mp:
-	npm version minor --message "$(MSG)"
+	npm version minor
 	npm publish
 pp!:
 	npm version patch --force
@@ -40,8 +40,8 @@ pp!:
 gpp: 
 	$(eval MSG ?= "Patch")
 	make git_all MSG="$(MSG)"
-	make pp MSG="$(MSG)"
+	make pp
 gmp: 
 	$(eval MSG ?= "Minor")
 	make git_all MSG="$(MSG)"
-	make mp MSG=$(MSG)
+	make mp
