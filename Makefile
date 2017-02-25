@@ -41,6 +41,7 @@ gpp:
 	$(eval MSG ?= "Patch")
 	git add ./
 	npm version patch --force --message "$(MSG) %s"
+	git push origin master
 	npm publish
 gmp: 
 	$(eval MSG ?= "Minor")
