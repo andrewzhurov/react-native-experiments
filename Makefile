@@ -37,13 +37,16 @@ pp!:
 	npm version patch --force
 	npm publish
 
-gpp: 
+## Seems it's not supposed to be used this way
+patch: 
 	$(eval MSG ?= "Patch")
 	git add ./
 	npm version patch --force --message "$(MSG) %s"
 	git push origin master
 	npm publish
-gmp: 
+minor: 
 	$(eval MSG ?= "Minor")
-	make git_all MSG="$(MSG)"
-	make mp
+	git add ./
+	npm version minor --force --message "$(MSG) %s"
+	git push origin master
+	npm publish
