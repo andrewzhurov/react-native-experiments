@@ -3,6 +3,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.widget.Toast;
 
 
@@ -38,12 +39,19 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
             //        .findFragmentById(R.id.frag_list);
             //fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
             //        WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
+            WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+
             showShort("Got broadcast: THIS_DEVICE_CHANGED");
+            showLong(String.format("address:%s name:%s status:%s type:%s", device.deviceAddress, device.deviceName, device.status, device.primaryDeviceType));
+
         }
     }
 
     private void showShort(String message) {
         Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show();
+    }
+    private void showLong(String message) {
+        Toast.makeText(this.context, message, Toast.LENGTH_LONG).show();
     }
 
 }

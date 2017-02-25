@@ -22,26 +22,30 @@ build:
 
 auto_publish: install build publish
 
-git_all:
+git_patch: MSG ?= Patch
 	git add ./
-	git commit -m "$(MSG)"
+	git commit -m $(MSG)
+	git push origin master
+git_minor:
+	MSG ?= Minor
+	git add ./
+	git commit -m $(MSG) 
 	git push origin master
 
-pp:
+pp: MSG ?= Patch
 	npm version patch --message "$(MSG)"
 	npm publish
 mp:
-	npm version minor --message "$(MSG)"
+	npm version minor
 	npm publish
 pp!:
 	npm version patch --force
 	npm publish
 
 gpp: 
-	$(eval MSG ?= "Patch")
-	make git_all MSG="$(MSG)"
-	make pp MSG="$(MSG)"
+	make git_patch MSG="$(MSG)"
+	make pp MSG=$(MSG)
 gmp: 
-	$(eval MSG ?= "Minor")
-	make git_all MSG="$(MSG)"
+	make git_minor MSG="$(MSG)"
 	make mp MSG=$(MSG)
+

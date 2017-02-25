@@ -81,13 +81,10 @@ public class P2pModule extends ReactContextBaseJavaModule {
         public void onFailure(int reasonCode) {
             // Code for when the discovery initiation fails goes here.
             // Alert the user that something went wrong.
-            showShort("Peer discovery failure");
+            showShort("Peer discovery failure, reason:" + reasonCode);
         }
         });
   }
- 
-
-  
     
   @Override
   public String getName() {
