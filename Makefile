@@ -28,10 +28,10 @@ git_all:
 	git push origin master
 
 pp:
-	npm version patch
+	npm version patch --no-git-tag-version
 	npm publish
 mp:
-	npm version minor
+	npm version minor --no-git-tag-version
 	npm publish
 pp!:
 	npm version patch --force
