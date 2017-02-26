@@ -43,15 +43,15 @@ public class P2pModule extends ReactContextBaseJavaModule {
       context = reactContext;
 
       mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-      mChannel= mManager.initialize(context, reactContext.getMainLooper(), null);
+      mChannel = mManager.initialize(context, reactContext.getMainLooper(), null);
 
   }
     
   @ReactMethod
-  public void registerP2pReceiver() {
+  public void registerP2pReceiver(Callback newPeerListCallback) {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
     //receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
-    receiver = new P2pBroadcastReceiver();
+    receiver = new P2pBroadcastReceiver(this.mManager, this.mChannel, newPeerListCallback);
     context.registerReceiver(receiver, intentFilter);
 
     showShort("Receiver registered");

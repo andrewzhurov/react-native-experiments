@@ -1,3 +1,4 @@
+## TODO some unused commands, strip or adapt
 install: 
 	npm install
 
