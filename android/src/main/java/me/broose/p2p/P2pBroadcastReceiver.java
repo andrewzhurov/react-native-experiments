@@ -49,7 +49,7 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
                 return;
             }
         }
-    }
+    };
 
     @Override
     public void onReceive(Context context, Intent intent) {
