@@ -24,7 +24,7 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
     
     public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel) {
         this.mManager = mManager;
-        this.mChannel = mchannel;
+        this.mChannel = mChannel;
         //this.newPeerListCallback = newPeerListCallback;
     }
 
