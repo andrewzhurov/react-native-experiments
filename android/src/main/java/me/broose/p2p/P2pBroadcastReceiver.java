@@ -7,7 +7,7 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
-import javax.security.auth.callback.Callback;
+//import javax.security.auth.callback.Callback;
 //import java.util.stream.Stream;
 import android.widget.Toast;
 
@@ -19,11 +19,13 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private WifiP2pManager mManager;
     private Channel mChannel;
-    private Callback newPeerListCallback;
+    // private Callback newPeerListCallback;
+    // , Callback newPeerListCallback
     
-    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel, Callback newPeerListCallback) {
+    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel) {
         this.mManager = mManager;
-        this.newPeerListCallback = newPeerListCallback;
+        this.mChannel = mchannel;
+        //this.newPeerListCallback = newPeerListCallback;
     }
 
     private PeerListListener peerListListener = new PeerListListener() {
@@ -32,7 +34,7 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
 
-             // TODO uncoment and fix
+             // TODO uncomment and fix
             ArrayList<WifiP2pDevice> refreshedPeers = (ArrayList) peerList.getDeviceList();
             if (!refreshedPeers.equals(this.peers)) {
                    this.peers.clear();
@@ -51,7 +53,7 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
                    
                    String out = "";
                    for (String address : addresses) {
-                       out = out + address;
+                       out += address;
                    }
                    
                    showLong(out);

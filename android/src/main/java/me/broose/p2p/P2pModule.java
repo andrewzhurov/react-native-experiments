@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import javax.security.auth.callback.Callback;
+// TODO maybe that's a wrong callback class
+//import javax.security.auth.callback.Callback;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.HashMap;
 
 import me.broose.p2p.P2pBroadcastReceiver;
-import me.broose.MyToastModule;
 
 public class P2pModule extends ReactContextBaseJavaModule {
 
@@ -47,42 +47,52 @@ public class P2pModule extends ReactContextBaseJavaModule {
 
   }
     
+    // Callback newPeerListCallback
+    // newPeerListCallback
   @ReactMethod
-  public void registerP2pReceiver(Callback newPeerListCallback) {
+  public void registerP2pReceiver() {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
-    receiver = new P2pBroadcastReceiver(mManager, mChannel, newPeerListCallback);
+    receiver = new P2pBroadcastReceiver(mManager, mChannel );
     context.registerReceiver(receiver, intentFilter);
 
     showShort("Receiver registered");
   }
-
- @ReactMethod
+  
+  @ReactMethod
   public void unregisterP2pReceiver() {
     context.unregisterReceiver(receiver);
 
     showShort("Receiver unregistered");
- }
+  }
 
-  @ReactMethod
-  public void discoverPeers() {
-    mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-
+  private WifiP2pManager.ActionListener gimmeListener(final String onSucessMsg, final String onFailureMsg){
+      return new WifiP2pManager.ActionListener() {
         @Override
         public void onSuccess() {
-            // Code for when the discovery initiation is successful goes here.
-            // No services have actually been discovered yet, so this method
-            // can often be left blank.  Code for peer discovery goes in the
-            // onReceive method, detailed below.
-            showShort("Peer discovery success");
+          showShort(onSucessMsg);
         }
-
         @Override
         public void onFailure(int reasonCode) {
-            // Code for when the discovery initiation fails goes here.
-            // Alert the user that something went wrong.
-            showShort("Peer discovery failure, reason:" + reasonCode);
+          showShort(onFailureMsg + reasonCode);
         }
-        });
+      };
+  }
+
+  @ReactMethod
+  public void createGroup() {
+    mManager.createGroup(mChannel,
+                         gimmeListener("Group creation success", "Group creation failure"));
+  }
+
+  @ReactMethod
+  public void removeGroup() {
+    mManager.removeGroup(mChannel,
+                         gimmeListener("Group removal success", "Group removal failure"));
+  }
+  @ReactMethod
+  public void discoverPeers() {
+    mManager.discoverPeers(mChannel,
+                           gimmeListener("Peer discovery success", "Group discovery failure"));
   }
     
   @Override
