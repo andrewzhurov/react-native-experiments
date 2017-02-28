@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-
+import javax.security.auth.callback.Callback;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -50,8 +50,7 @@ public class P2pModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void registerP2pReceiver(Callback newPeerListCallback) {
     // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
-    //receiver = new P2PBroadcastReceiver(mManager, mChannel, this);
-    receiver = new P2pBroadcastReceiver(this.mManager, this.mChannel, newPeerListCallback);
+    receiver = new P2pBroadcastReceiver(mManager, mChannel, newPeerListCallback);
     context.registerReceiver(receiver, intentFilter);
 
     showShort("Receiver registered");

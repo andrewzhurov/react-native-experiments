@@ -35,7 +35,7 @@ mp:
 	npm version minor --no-git-tag-version
 	npm publish
 pp!:
-	npm version patch --force
+	npm version patch --force --no-git-tag-version
 	npm publish
 
 ## Seems it's not supposed to be used this way

@@ -6,42 +6,56 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import javax.security.auth.callback.Callback;
+//import java.util.stream.Stream;
 import android.widget.Toast;
+
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class P2pBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private WifiP2pManager mManager;
     private Channel mChannel;
-    private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     private Callback newPeerListCallback;
     
-    public P2pBroadcastReceiver(WifiP2pManager mManager, Callback newPeerListCallback) {
+    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel, Callback newPeerListCallback) {
         this.mManager = mManager;
         this.newPeerListCallback = newPeerListCallback;
     }
 
     private PeerListListener peerListListener = new PeerListListener() {
+        private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
 
-            List<WifiP2pDevice> refreshedPeers = peerList.getDeviceList();
+             // TODO uncoment and fix
+            ArrayList<WifiP2pDevice> refreshedPeers = (ArrayList) peerList.getDeviceList();
             if (!refreshedPeers.equals(this.peers)) {
-                //String out = refreshedPeers.
-                // and call cb with new peers
-                this.peers.clear();
-                this.peers.addAll(refreshedPeers);
-                showLong(String.format("device list obj:%s", this.peers.toString));
+                   this.peers.clear();
+                   this.peers.addAll(refreshedPeers);
+                   //Stream<String> strStream = this.peers.stream()
+                   //                                     .map(WifiP2pDevice::deviceAddress);
+                   //public class Dull {
+                   //    public static String sumStrings(String a, String b) {
+                   //        return a + b;
+                   //    }};
+                   //String out = strStream.reduce("", Dull::sumStrings);
+                   ArrayList<String> addresses = new ArrayList<>();
+                   for (WifiP2pDevice device : refreshedPeers){
+                       addresses.add(device.deviceAddress);
+                   }
+                   
+                   String out = "";
+                   for (String address : addresses) {
+                       out = out + address;
+                   }
+                   
+                   showLong(out);
 
-
-                // If an AdapterView is backed by this data, notify it
-                // of the change.  For instance, if you have a ListView of
-                // available peers, trigger an update.
-                //((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-
-                // Perform any other updates needed based on the new list of
-                // peers connected to the Wi-Fi P2P network.
             }
 
             if (peers.size() == 0) {
@@ -76,7 +90,7 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
             if (this.mManager != null) {
                 this.mManager.requestPeers(this.mChannel, this.peerListListener);
             }
-            Log.d(P2pBroadcastReceiver.TAG, "P2P peers changed");
+            //Log.d(P2pBroadcastReceiver.TAG, "P2P peers changed");
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
