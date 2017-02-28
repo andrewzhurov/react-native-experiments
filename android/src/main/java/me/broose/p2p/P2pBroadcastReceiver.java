@@ -7,7 +7,10 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+
+import com.facebook.react.bridge.Callback;
 //import javax.security.auth.callback.Callback;
+
 //import java.util.stream.Stream;
 import android.widget.Toast;
 
@@ -19,33 +22,18 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private WifiP2pManager mManager;
     private Channel mChannel;
-    // private Callback newPeerListCallback;
-    // , Callback newPeerListCallback
-    
-    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel) {
+    private Callback newPeerListCallback;
+    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel, Callback newPeerListCallback) {
         this.mManager = mManager;
         this.mChannel = mChannel;
-        //this.newPeerListCallback = newPeerListCallback;
+        this.newPeerListCallback = newPeerListCallback;
     }
 
     private PeerListListener peerListListener = new PeerListListener() {
-        private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
 
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
-
-             // TODO uncomment and fix
-            ArrayList<WifiP2pDevice> refreshedPeers = (ArrayList) peerList.getDeviceList();
-            if (!refreshedPeers.equals(this.peers)) {
-                   this.peers.clear();
-                   this.peers.addAll(refreshedPeers);
-                   //Stream<String> strStream = this.peers.stream()
-                   //                                     .map(WifiP2pDevice::deviceAddress);
-                   //public class Dull {
-                   //    public static String sumStrings(String a, String b) {
-                   //        return a + b;
-                   //    }};
-                   //String out = strStream.reduce("", Dull::sumStrings);
+            ArrayList<WifiP2pDevice> refreshedPeers = new ArrayList<>(peerList.getDeviceList());
                    ArrayList<String> addresses = new ArrayList<>();
                    for (WifiP2pDevice device : refreshedPeers){
                        addresses.add(device.deviceAddress);
@@ -56,16 +44,10 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
                        out += address;
                    }
                    
-                   showLong(out);
-
+                   showLong("device list:" + out);
+                   newPeerListCallback(out);
             }
-
-            if (peers.size() == 0) {
-                showLong("new device list is empty");
-                return;
-            }
-        }
-    };
+        };
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -107,11 +89,9 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
             //        WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
             WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
 
-            showShort("Got broadcast: THIS_DEVICE_CHANGED");
-            showLong(String.format("address:%s name:%s status:%s type:%s", device.deviceAddress, device.deviceName, device.status, device.primaryDeviceType));
-
+            showLong(String.format("THIS_DEVICE_CHANGED address:%s name:%s status:%s type:%s", device.deviceAddress, device.deviceName, device.status, device.primaryDeviceType));
         }
-    }
+   }
 
     private void showShort(String message) {
         Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show();
