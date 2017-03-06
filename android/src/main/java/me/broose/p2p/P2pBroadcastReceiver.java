@@ -8,47 +8,47 @@ import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 
-import com.facebook.react.bridge.Callback;
-//import javax.security.auth.callback.Callback;
-
 //import java.util.stream.Stream;
 import android.widget.Toast;
 
 import java.util.List;
 import java.util.ArrayList;
 
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.WritableMap;
 
 public class P2pBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private WifiP2pManager mManager;
     private Channel mChannel;
-    private Callback newPeerListCallback;
-    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel, Callback newPeerListCallback) {
+    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel) {
         this.mManager = mManager;
         this.mChannel = mChannel;
-        this.newPeerListCallback = newPeerListCallback;
     }
 
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(eventName, params);
+    }
     private PeerListListener peerListListener = new PeerListListener() {
-
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
+            WritableMap out = Arguments.createMap();
             ArrayList<WifiP2pDevice> refreshedPeers = new ArrayList<>(peerList.getDeviceList());
-                   ArrayList<String> addresses = new ArrayList<>();
-                   for (WifiP2pDevice device : refreshedPeers){
-                       addresses.add(device.deviceAddress);
-                   }
-                   
-                   String out = "";
-                   for (String address : addresses) {
-                       out += address;
-                   }
-                   
-                   showLong("device list:" + out);
-                   newPeerListCallback(out);
+            for (WifiP2pDevice device : refreshedPeers){
+                out.putString("deviceName", device.deviceName);
+                out.putString("deviceAddress", device.deviceAddress);
+                out.putString("status", device.status);
+                out.putString("primaryDeviceType", device.primaryDeviceType);
+            }
+            
+            sendEvent(reactContext, "new peer list", out);
             }
         };
-
+    
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
