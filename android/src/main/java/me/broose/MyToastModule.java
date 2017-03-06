@@ -38,7 +38,6 @@ public class MyToastModule extends ReactContextBaseJavaModule {
     Toast.makeText(getReactApplicationContext(), message, duration).show();
   }
     
-  // TODO it may fail due static, check it
   @ReactMethod
   public void showShort(String message) {
     Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();

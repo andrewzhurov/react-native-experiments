@@ -7,23 +7,32 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.util.Log;
 
 //import java.util.stream.Stream;
 import android.widget.Toast;
 
 import java.util.List;
 import java.util.ArrayList;
+import android.support.annotation.Nullable;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
+
+
 
 public class P2pBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private WifiP2pManager mManager;
     private Channel mChannel;
-    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel) {
+    private ReactApplicationContext reactContext;
+    public P2pBroadcastReceiver(WifiP2pManager mManager, Channel mChannel, ReactApplicationContext reactContext) {
         this.mManager = mManager;
         this.mChannel = mChannel;
+        this.reactContext = reactContext;
     }
 
     private void sendEvent(ReactContext reactContext,
@@ -41,12 +50,12 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
             for (WifiP2pDevice device : refreshedPeers){
                 out.putString("deviceName", device.deviceName);
                 out.putString("deviceAddress", device.deviceAddress);
-                out.putString("status", device.status);
+                out.putInt("status", device.status);
                 out.putString("primaryDeviceType", device.primaryDeviceType);
             }
             
             sendEvent(reactContext, "new peer list", out);
-            }
+        }
         };
     
     @Override
@@ -58,15 +67,15 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
             // the Activity.
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                showShort("Got broadcast: wifi p2p enabled");
+                log("WIFI_P2P_STATE_ENABLED");
             } else {
-                showShort("Got broadcast: wifi p2p disabled");
+                log("WIFI_P2P_STATE_DISABLED");
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
             // The peer list has changed!  We should probably do something about
             // that.
-            showShort("Got broadcast: peer list has changed");
+            log("WIFI_P2P_PEERS_CHANGED_ACTION");
             
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
@@ -80,7 +89,7 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
 
             // Connection state changed!  We should probably do something about
             // that.
-            showShort("Got broadcast: connection state changed");
+            log("WIFI_P2P_CONNECTION_CHANGED_ACTION");
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             //DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
@@ -89,15 +98,11 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
             //        WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
             WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
 
-            showLong(String.format("THIS_DEVICE_CHANGED address:%s name:%s status:%s type:%s", device.deviceAddress, device.deviceName, device.status, device.primaryDeviceType));
+            log(String.format("WIFI_P2P_THIS_DEVICE_CHANGED_ACTION address:%s name:%s status:%s type:%s", device.deviceAddress, device.deviceName, device.status, device.primaryDeviceType));
         }
    }
 
-    private void showShort(String message) {
-        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show();
+    private void log(String message) {
+        Log.i("broose_react-native-experiments", message);
     }
-    private void showLong(String message) {
-        Toast.makeText(this.context, message, Toast.LENGTH_LONG).show();
-    }
-
 }

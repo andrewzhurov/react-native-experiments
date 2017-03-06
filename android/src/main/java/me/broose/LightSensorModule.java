@@ -16,6 +16,7 @@ import android.hardware.SensorManager;
 
 import java.util.Map;
 import java.util.HashMap;
+import android.util.Log;
 
 
 public class LightSensorModule extends ReactContextBaseJavaModule {
@@ -36,11 +37,7 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
     final Map<String, Object> constants = new HashMap<>();
     return constants;
   }
-  @ReactMethod
-  public void toastQuick (String message) {
-      Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
-  }
-    
+  
   @ReactMethod
   public void keepMeUpdated() {
       SensorManager mySensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
@@ -52,9 +49,9 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
                                            LightSensor, 
                                            SensorManager.SENSOR_DELAY_NORMAL);
           
-          toastQuick("Listener registered");
+          log("Listener registered");
       }else{
-      toastQuick("Light sensor doesn't present");}
+      log("Light sensor doesn't present");}
   }
     
   private final SensorEventListener LightSensorListener
@@ -68,11 +65,15 @@ public class LightSensorModule extends ReactContextBaseJavaModule {
               @Override
               public void onSensorChanged(SensorEvent event) {
                   if(event.sensor.getType() == Sensor.TYPE_LIGHT){
-                      toastQuick("LIGHT: " + event.values[0]);
+                      log("LIGHT: " + event.values[0]);
                   }
               }
      
     };
+  private void log(String message) {
+      Log.i("broose_react-native-experiments", message);
+  }
+
 }
 
 

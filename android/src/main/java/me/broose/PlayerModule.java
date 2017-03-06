@@ -13,6 +13,7 @@ import java.util.HashMap;
 import android.content.Context;
 import java.io.File;
 import android.net.Uri;
+import android.util.Log;
 
 import android.media.MediaPlayer;
 
@@ -37,16 +38,16 @@ public class PlayerModule extends ReactContextBaseJavaModule {
   public void create(String path) {
     File file = new File(path);
     Uri uri = Uri.fromFile(file); 
-    Toast.makeText(getReactApplicationContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+    log(uri.toString());
     MediaPlayer mp = MediaPlayer.create(getReactApplicationContext(), uri);
     if(this.mp != null) {
       this.mp.release();
     }
     if(mp != null) {
       this.mp = mp;
-      Toast.makeText(getReactApplicationContext(), "Player created", Toast.LENGTH_LONG).show();
+      log("Player created");
     } else {
-      Toast.makeText(getReactApplicationContext(), "Can't create a player", Toast.LENGTH_LONG).show();
+      log("Can't create a player");
     }
   }
   @ReactMethod
@@ -72,8 +73,11 @@ public class PlayerModule extends ReactContextBaseJavaModule {
     try {
     this.mp.prepare();
     } catch (Exception ex) {
-    Toast.makeText(getReactApplicationContext(), "Exception during prepare", Toast.LENGTH_LONG).show();
+    log("Exception during prepare");
     }
   }
 
+  private void log(String message) {
+      Log.i("broose_react-native-experiments", message);
+  }
 }

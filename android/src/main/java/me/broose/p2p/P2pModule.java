@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 
 import com.facebook.react.bridge.Callback;
-//import javax.security.auth.callback.Callback;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -16,16 +15,17 @@ import com.facebook.react.bridge.ReactMethod;
 import android.widget.Toast;
 import java.util.Map;
 import java.util.HashMap;
+import android.util.Log;
 
 import me.broose.p2p.P2pBroadcastReceiver;
 
 public class P2pModule extends ReactContextBaseJavaModule {
 
   private final IntentFilter intentFilter = new IntentFilter();
-  private Context context;
   private WifiP2pManager mManager;
   private Channel mChannel;
   private BroadcastReceiver receiver;
+  private ReactApplicationContext reactContext;
 
 
   public P2pModule(ReactApplicationContext reactContext) {
@@ -38,37 +38,37 @@ public class P2pModule extends ReactContextBaseJavaModule {
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
       // Indicates this device's details have changed.
       intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-      context = reactContext;
+      this.reactContext = reactContext;
 
-      mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-      mChannel = mManager.initialize(context, reactContext.getMainLooper(), null);
+      mManager = (WifiP2pManager) reactContext.getSystemService(Context.WIFI_P2P_SERVICE);
+      mChannel = mManager.initialize(reactContext, reactContext.getMainLooper(), null);
+      receiver = new P2pBroadcastReceiver(mManager, mChannel, this.reactContext);
   }
     
   @ReactMethod
-  public void registerP2pReceiver(Callback newPeerListCallback) {
-    // TODO check if unregisterReceiver somehow modify stroke below, if no - put outside
-    receiver = new P2pBroadcastReceiver(mManager, mChannel, newPeerListCallback);
-    context.registerReceiver(receiver, intentFilter);
+  public void registerP2pReceiver() {
+    // TODO may construct multiple instances (?)
+    reactContext.registerReceiver(receiver, intentFilter);
 
-    showShort("Receiver registered");
+    log("Receiver registered");
   }
   
   @ReactMethod
   public void unregisterP2pReceiver() {
-    context.unregisterReceiver(receiver);
+    reactContext.unregisterReceiver(this.receiver);
 
-    showShort("Receiver unregistered");
+    log("Receiver unregistered");
   }
 
   private WifiP2pManager.ActionListener gimmeListener(final String onSucessMsg, final String onFailureMsg){
       return new WifiP2pManager.ActionListener() {
         @Override
         public void onSuccess() {
-          showShort(onSucessMsg);
+          log(onSucessMsg);
         }
         @Override
         public void onFailure(int reasonCode) {
-          showShort(onFailureMsg + reasonCode);
+          log(onFailureMsg + reasonCode);
         }
       };
   }
@@ -95,20 +95,7 @@ public class P2pModule extends ReactContextBaseJavaModule {
     return "P2pAndroid";
   }
     
-  @Override
-  public Map<String, Object> getConstants() {
-    final Map<String, Object> constants = new HashMap<>();
-    return constants;
+  private void log(String message) {
+      Log.i("broose_react-native-experiments", message);
   }
-    
-  @ReactMethod
-  public void show(String message, int duration) {
-    Toast.makeText(getReactApplicationContext(), message, duration).show();
-  }
-    
-  @ReactMethod
-  public void showShort(String message) {
-    Toast.makeText(getReactApplicationContext(), message, Toast.LENGTH_SHORT).show();
-  }
-    
 }
