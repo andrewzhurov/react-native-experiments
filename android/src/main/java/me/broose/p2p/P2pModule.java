@@ -11,6 +11,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 
 import android.widget.Toast;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import android.util.Log;
 
 import me.broose.p2p.P2pBroadcastReceiver;
+import me.broose.Utils;
 
 public class P2pModule extends ReactContextBaseJavaModule {
 
@@ -90,6 +92,38 @@ public class P2pModule extends ReactContextBaseJavaModule {
                            gimmeListener("Peer discovery success", "Group discovery failure"));
   }
     
+  @ReactMethod
+  public void registerService(String instanceName, String serviceType, ReadableMap infoStringPairs) {
+      //  Create a string map containing information about your service.
+      Map<String, String> about = Utils.toStringMap(infoStringPairs);
+
+      // Service information.  Pass it an instance name, service type
+      // _protocol._transportlayer , and the map containing
+      // information other devices will want once they connect to this one.
+      WifiP2pDnsSdServiceInfo serviceInfo =
+          WifiP2pDnsSdServiceInfo.newInstance(instanceName, serviceType, about);
+
+      // Add the local service, sending the service info, network channel,
+      // and listener that will be used to indicate success or failure of
+      // the request.
+      this.mManager.addLocalService(this.mChannel, serviceInfo, new ActionListener() {
+              @Override
+              public void onSuccess() {
+                  // Command successful! Code isn't necessarily needed here,
+                  // Unless you want to update the UI or add logging statements.
+                  Utils.sendEvent(this.reactContext, "service registration success", null);
+              }
+
+              @Override
+              public void onFailure(int arg0) {
+                  // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
+                  WritableMap cargo = Arguments.createMap();
+                  cargo.putInt("reason", arg0);
+                  Utils.sendEvent(this.reactContext, "service registration failure", cargo);
+              }
+          });
+  } 
+    
   @Override
   public String getName() {
     return "P2pAndroid";
@@ -98,4 +132,5 @@ public class P2pModule extends ReactContextBaseJavaModule {
   private void log(String message) {
       Log.i("broose_react-native-experiments", message);
   }
+
 }

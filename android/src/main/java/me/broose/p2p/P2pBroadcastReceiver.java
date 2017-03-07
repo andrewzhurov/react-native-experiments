@@ -22,6 +22,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 
+import me.broose.Utils;
 
 
 public class P2pBroadcastReceiver extends BroadcastReceiver {
@@ -35,26 +36,19 @@ public class P2pBroadcastReceiver extends BroadcastReceiver {
         this.reactContext = reactContext;
     }
 
-    private void sendEvent(ReactContext reactContext,
-                           String eventName,
-                           @Nullable WritableMap params) {
-        reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
-    }
-    private PeerListListener peerListListener = new PeerListListener() {
+        private PeerListListener peerListListener = new PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
-            WritableMap out = Arguments.createMap();
+            WritableMap cargo = Arguments.createMap();
             ArrayList<WifiP2pDevice> refreshedPeers = new ArrayList<>(peerList.getDeviceList());
             for (WifiP2pDevice device : refreshedPeers){
-                out.putString("deviceName", device.deviceName);
-                out.putString("deviceAddress", device.deviceAddress);
-                out.putInt("status", device.status);
-                out.putString("primaryDeviceType", device.primaryDeviceType);
+                cargo.putString("deviceName", device.deviceName);
+                cargo.putString("deviceAddress", device.deviceAddress);
+                cargo.putInt("status", device.status);
+                cargo.putString("primaryDeviceType", device.primaryDeviceType);
             }
             
-            sendEvent(reactContext, "new peer list", out);
+            Utils.sendEvent(reactContext, "new peer list", cargo);
         }
         };
     
