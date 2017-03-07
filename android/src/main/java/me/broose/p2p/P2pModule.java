@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 
 import com.facebook.react.bridge.Callback;
 
@@ -106,7 +107,7 @@ public class P2pModule extends ReactContextBaseJavaModule {
       // Add the local service, sending the service info, network channel,
       // and listener that will be used to indicate success or failure of
       // the request.
-      this.mManager.addLocalService(this.mChannel, serviceInfo, new ActionListener() {
+      this.mManager.addLocalService(this.mChannel, serviceInfo, new WifiP2pManager.ActionListener() {
               @Override
               public void onSuccess() {
                   // Command successful! Code isn't necessarily needed here,
