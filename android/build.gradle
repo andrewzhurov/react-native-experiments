@@ -18,6 +18,6 @@ android {
 }
 
 dependencies {
-  compile 'com.facebook.react:react-native:0.12.+'
+  compile 'com.facebook.react:react-native:0.42.+'
   // TODO try on 0.42.+ rn
 }

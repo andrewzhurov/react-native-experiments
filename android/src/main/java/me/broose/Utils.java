@@ -12,27 +12,28 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
-
+import com.facebook.react.bridge.Dynamic;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class Utils {
 
-    public static Map<String, String> toStringMap(@Nullable ReadableMap readableMap) {
-        if (readableMap == null) {
+    public static WritableMap toRNMap(@Nullable Map stringMap) {
+        if (stringMap == null) {
             return null;
         }
 
-        ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-        if (!iterator.hasNextKey()) {
-            return null;
+        WritableMap out = Arguments.createMap();
+        for (Map.Entry entry : stringMap.entrySet()) {
+            final String key = entry.getKey().toString();
+            final Object value = entry.getValue();
+            if (value instanceof String) {
+                out.putString(key, (String) value);
+            } else if (value instanceof Integer) {
+                // TODO may not work
+                out.putInt(key, (int) value);
+            } 
         }
-
-        Map<String, String> result = new HashMap<>();
-        while (iterator.hasNextKey()) {
-            String name = iterator.nextKey();
-            result.put(name, readableMap.getString(name));
-        }
-
-        return result;
+        return out;
     }
 
     public static void sendEvent(ReactContext reactContext,

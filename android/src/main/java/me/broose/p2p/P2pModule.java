@@ -13,6 +13,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.Arguments;
 
 import android.widget.Toast;
 import java.util.Map;
@@ -112,7 +114,7 @@ public class P2pModule extends ReactContextBaseJavaModule {
               public void onSuccess() {
                   // Command successful! Code isn't necessarily needed here,
                   // Unless you want to update the UI or add logging statements.
-                  Utils.sendEvent(this.reactContext, "service registration success", null);
+                  Utils.sendEvent(reactContext, "service registration success", null);
               }
 
               @Override
@@ -120,9 +122,51 @@ public class P2pModule extends ReactContextBaseJavaModule {
                   // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
                   WritableMap cargo = Arguments.createMap();
                   cargo.putInt("reason", arg0);
-                  Utils.sendEvent(this.reactContext, "service registration failure", cargo);
+                  Utils.sendEvent(reactContext, "service registration failure", cargo);
               }
           });
+  } 
+  @ReactMethod
+  public void discoverServices() {
+      WifiP2pManager.DnsSdTxtRecordListener txtListener = new WifiP2pManager.DnsSdTxtRecordListener() {
+              @Override
+              /* Callback includes:
+               * fullDomain: full domain name: e.g "printer._ipp._tcp.local."
+               * record: TXT record dta as a map of key/value pairs.
+               * device: The device running the advertised service.
+               */
+
+              public void onDnsSdTxtRecordAvailable(String fullDomain, Map record, WifiP2pDevice device) {
+                  log("DnsSdTxtRecord available -" + record.toString());
+                  try {
+                      //WritableMap recordRNMap = Utils.fromStringMap(record);
+                      //recordRNMap.putString("fullDomain", fullDomain);
+                      //recordRNMap.putString("", "");
+                      //Utils.sendEvent(reactContext, "", recordRNMap);
+                      buddies.put(device.deviceAddress, record.get("buddyname"));
+                  } catch (Exception e) {
+                      log("Exception while obtaining txt record of service");
+                  }
+              }
+          }; 
+      WifiP2pManager.DnsSdServiceResponseListener servListener = new WifiP2pManager.DnsSdServiceResponseListener() {
+              @Override
+              public void onDnsSdServiceAvailable(String instanceName, String registrationType,
+                                                  WifiP2pDevice resourceType) {
+
+                  // Update the device name with the human-friendly version from
+                  // the DnsTxtRecord, assuming one arrived.
+                  resourceType.deviceName = buddies
+                      .containsKey(resourceType.deviceAddress) ? buddies
+                      .get(resourceType.deviceAddress) : resourceType.deviceName;
+                  WritableMap cargo = toRNMap(resourceType);
+                  
+                  Utils.sendEvent(reactContext, "service discovered", cargo);
+                  log("onBonjourServiceAvailable " + instanceName);
+              }
+          };
+
+      this.mManager.setDnsSdResponseListeners(channel, servListener, txtListener);
   } 
     
   @Override
