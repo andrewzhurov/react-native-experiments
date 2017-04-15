@@ -1,0 +1,98 @@
+* DESCRIPTION
+  Notes and analysis of "Learning React Native" book
+* CONTENT
+  - Ch1
+    Introduction, props and cons.
+    Key info:
+    - props:
+      1.Handy for React web devs
+      2.native feel better than webview (performance and look)
+      3.live reloading, other tools (what about them?)
+      4.web debugging available (!) (how does it works through web tab?)
+      5.updates over the air
+      6.since it's React ecosystem, knowledge sharing inside, lower dispersion
+      7.massive code reuse
+    - cons:
+      1.new, not polished, will cause some pain during development, not all the best practices yet developed
+      2.hairier debugger due to new level of abstraction in app, especially on the border
+      3.code reuse not complete, not all the platform specific stuff unified and will be
+  - Ch2
+    "bridge", underhood stuff, React and RN components difference, what to know in order to create and style components for mobile
+    So, some amount of theory goes
+    Key info:
+    - Virtual Dom:
+      1.first of all is the abstraction between developer's code and actual rendering,
+        it's how our app should look (structure/info, what to show), so it then draws somehow (how to show)
+      2.performance optimizer
+    "bridge" is the maping of generalized VDOM components to specific platform's components
+    RN could be targeted to other platform if corresponded bridge would exist, now only Android and iOS
+    
+    Lifecycle(browser): Page Renders -> Mount component to DOM -> render component; State change -> compute diff -> render
+    For RN rendering process slightly different - it depends on the bridge - js calls to underlying APIs and UI elements.
+    Doesn't run on the main UI thread -> async, no impact on UE/interface responsive
+
+    - Creating Components
+      RN comps = R comps almost
+      Diff: rendering, styling
+      Logic components top, platform specific comps very bottom
+      JSX for separation of consernes, over separation of technologies
+      On mobile there is standartarized pruned subset of CSS, and "bridge" uses it for styling. Standardised !
+      Style objects, not stylesheets (useful shift he said)
+      "bridge" provides generalized comps from subset of equaly platform's APIs, platform specific comps exist
+     
+    Sum: concept the same, differs set of components, not full CSS 
+  - Ch3
+    Installation instructions/setting up environment/first launch                    
+    Building first app
+    - Set up environment (use facebook.github.io/react-native/):
+      1.node
+      2.watchman
+      3.flow (optional)
+      4.react-native-cli (~$ npm install -g react-native-cli~)
+      - Platform dependent:
+        - iOS:
+          1.developer's account (license needed to deploy to store)
+          2.Xcode IDE
+        - Android:
+          1.JDK
+          2.Android SKD
+          3.Export ANDROID_HOME to SDK folder
+          4. ~$ android~ and install:
+             1.Build-tools v23.0.1
+             2.Android 6.0 (API 23)
+             3.Android Support Repository
+             4.stuff for simulators (System Image and Emulator Accelerator (x86 example))
+      5. ~$ react-native init FirstProject~
+         H index.[android|ios].js is entrypoint for React app
+      6.Optional ~$ npm start~ to start packager
+        H Need to be on in order to have changes in code reflected in the app
+      - iOS:
+        1.register account and device in Xcode
+        2.alter AppDelegate.m to include Mac's IP instead of localhost
+        now we can select physical devise as the deploy target
+      - Android:
+        - start the emulator
+          ~$ android avd~
+          or
+          ~$ emulator -list-avds~
+          ~$ emulator @galaxy~
+          ~$ react-native run-android~
+       see in book                                                                      
+    index.*.js register a component                                                  
+    corresponding native code - mount to view                                        
+    we need explicitly import every component we use                                 
+    images (and probably other assets) can be obtained by local path                 
+    Flexbox for layouting                                                            
+    practice Fetch API
+    Sample app built, though (maybe on newer version of RN) layouting worked shitty 
+  - Ch4
+    
+    
+    
+            
+    
+    
+      
+       
+        
+      
