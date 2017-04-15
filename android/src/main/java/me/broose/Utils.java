@@ -17,24 +17,25 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class Utils {
 
-    public static WritableMap toRNMap(@Nullable Map stringMap) {
-        if (stringMap == null) {
-            return null;
-        }
+    // ERROR stringMap.entrySet() returns an object and can't see it as an entry
+    //public static WritableMap toRNMap(@Nullable Map stringMap) {
+    //    if (stringMap == null) {
+    //        return null;
+    //    }
 
-        WritableMap out = Arguments.createMap();
-        for (Map.Entry entry : stringMap.entrySet()) {
-            final String key = entry.getKey().toString();
-            final Object value = entry.getValue();
-            if (value instanceof String) {
-                out.putString(key, (String) value);
-            } else if (value instanceof Integer) {
-                // TODO may not work
-                out.putInt(key, (int) value);
-            } 
-        }
-        return out;
-    }
+    //    WritableMap out = Arguments.createMap();
+    //    for (Map.Entry<Object, Object> entry : stringMap.entrySet()) {
+    //        final String key = entry.getKey().toString();
+    //        final Object value = entry.getValue();
+    //        if (value instanceof String) {
+    //            out.putString(key, (String) value);
+    //        } else if (value instanceof Integer) {
+    //            // TODO may not work
+    //            out.putInt(key, (int) value);
+    //        } 
+    //    }
+    //    return out;
+    //}
 
     public static void sendEvent(ReactContext reactContext,
                                  String eventName,

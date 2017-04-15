@@ -3,6 +3,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
@@ -17,6 +18,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
 
 import android.widget.Toast;
+import java.lang.Math;
 import java.util.Map;
 import java.util.HashMap;
 import android.util.Log;
@@ -95,10 +97,15 @@ public class P2pModule extends ReactContextBaseJavaModule {
                            gimmeListener("Peer discovery success", "Group discovery failure"));
   }
     
+  // Broken
   @ReactMethod
   public void registerService(String instanceName, String serviceType, ReadableMap infoStringPairs) {
       //  Create a string map containing information about your service.
-      Map<String, String> about = Utils.toStringMap(infoStringPairs);
+      //Map<String, String> about = Utils.toRNMap(infoStringPairs);
+      Map about = new HashMap();
+      about.put("listenport", "6666");
+      about.put("buddyname", "Dark Guy" + (int) (Math.random() * 1000));
+      about.put("available", "visible");
 
       // Service information.  Pass it an instance name, service type
       // _protocol._transportlayer , and the map containing
@@ -126,6 +133,10 @@ public class P2pModule extends ReactContextBaseJavaModule {
               }
           });
   } 
+  
+  // BAD
+  // Broken
+  final HashMap<String, String> buddies = new HashMap<String, String>();
   @ReactMethod
   public void discoverServices() {
       WifiP2pManager.DnsSdTxtRecordListener txtListener = new WifiP2pManager.DnsSdTxtRecordListener() {
@@ -139,11 +150,15 @@ public class P2pModule extends ReactContextBaseJavaModule {
               public void onDnsSdTxtRecordAvailable(String fullDomain, Map record, WifiP2pDevice device) {
                   log("DnsSdTxtRecord available -" + record.toString());
                   try {
-                      //WritableMap recordRNMap = Utils.fromStringMap(record);
-                      //recordRNMap.putString("fullDomain", fullDomain);
-                      //recordRNMap.putString("", "");
-                      //Utils.sendEvent(reactContext, "", recordRNMap);
-                      buddies.put(device.deviceAddress, record.get("buddyname"));
+                      // TODO put record inside
+                      WritableMap deviceRNMap = me.broose.p2p.Utils.deviceToRNMap(device);
+                      WritableMap cargo = Arguments.createMap();
+                      cargo.putString("fullDomain", fullDomain);
+                      cargo.putString("record", "dull");
+                      cargo.putMap("device", deviceRNMap);
+
+                      Utils.sendEvent(reactContext, "txt service record found", cargo);
+                      buddies.put(device.deviceAddress, (String) record.get("buddyname"));
                   } catch (Exception e) {
                       log("Exception while obtaining txt record of service");
                   }
@@ -159,14 +174,14 @@ public class P2pModule extends ReactContextBaseJavaModule {
                   resourceType.deviceName = buddies
                       .containsKey(resourceType.deviceAddress) ? buddies
                       .get(resourceType.deviceAddress) : resourceType.deviceName;
-                  WritableMap cargo = toRNMap(resourceType);
+                  WritableMap cargo = me.broose.p2p.Utils.deviceToRNMap(resourceType);
                   
                   Utils.sendEvent(reactContext, "service discovered", cargo);
                   log("onBonjourServiceAvailable " + instanceName);
               }
           };
 
-      this.mManager.setDnsSdResponseListeners(channel, servListener, txtListener);
+      this.mManager.setDnsSdResponseListeners(mChannel, servListener, txtListener);
   } 
     
   @Override
