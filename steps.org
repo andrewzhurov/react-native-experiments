@@ -1,0 +1,39 @@
+* Create Project
+  - ~$ re-natal init FutureApp -i [om-next | reagent6 | rum]~
+  
+* Flow
+  - ~$ re-natal use-android-device genymotion~
+  - ~$ re-natal use-figwheel~
+    Generates index.*.js with ~optimizations :none~
+    To disable figwheel ~$ lein prod-build~
+  - ~$ lein figwheel android~
+    Launch figwheel
+  - ~$ react-native start~
+    Launch react-native package manager
+  - ~$ npm i some-library --save~
+    To use some-library/Component ~(def Component (js/require "some-library/Component"))~
+    ! Works with ~$ lein prod-build~, but fails with figwheel.
+      To overcome use ~$ re-natal use-component some-library/Component [ios | android]~
+      Then regenerate index.*.js, restart packager, reload app.
+    H You can delete manually wrong-typed component from .re-natal
+  - ~$ react-native run-android~
+    Deploys app, figwheel should connect
+  
+* Useful
+  - ~$ lein prod-build~
+    It will clean and rebuild index.ios.js and index.android.js with ~optimizations :simple~
+    Having index.ios.js and index.android.js build this way, you should be able to follow the RN docs to proceed with the release.
+  - static images
+    When you have dropped a new image to "images" dir, you need to restart RN packager and re-run command:
+    ~$ re-natal use-figwheel~
+    This is needed to regenerate index.*.js files which includes require calls to all local images.
+    After this you can use a new image in your cljs code.
+
+* Upgrading
+  - RN and re-natal
+    bottom of [1]
+  - components
+    //TODO
+
+* Sources
+  1. https://github.com/drapanjanas/re-natal 
